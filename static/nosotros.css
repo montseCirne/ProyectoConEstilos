@@ -1,0 +1,136 @@
+
+        /* Estilos generales */
+        body {
+            font-family: 'Heebo', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sección Hero */
+        .hero-section {
+            background: url('fondo1.avif') no-repeat center center/cover;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Estilo de las secciones */
+        .about-section {
+            padding: 30px 0;  /* Reducir espacio */
+            background-color: #f8f9fa;
+        }
+
+        .about-section h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FFC107;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #6c757d;
+            text-align: justify;
+            margin-bottom: 20px;  /* Reducir el espacio después de los párrafos */
+        }
+
+        .about-section img {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .team-card {
+            border: none;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;  /* Reducir el espacio entre las tarjetas */
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-card img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .team-card h5 {
+            font-size: 1.2rem;
+            margin-top: 15px;
+        }
+
+        .team-card p {
+            font-size: 1rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        /* Sección Filosofía */
+        .philosophy-section {
+            background-color: #f8f9fa;
+            padding: 40px 0;  /* Reducir el espacio */
+            text-align: center;
+        }
+
+        .philosophy-section h3 {
+            font-size: 2rem;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+
+        .philosophy-section p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #6c757d;
+            text-align: justify;
+        }
+
+        /* Estilos para la barra de navegación */
+        nav {
+            background-color: #343a40;
+        }
+
+        nav .navbar-brand, nav .navbar-nav a {
+            color: white !important;
+        }
+
+        /* Estilo para el botón de retorno al inicio */
+        .back-to-top {
+            background-color: #FFC107;
+            color: white;
+            text-align: center;
+            padding: 15px 40px;
+            margin-top: 30px;
+            cursor: pointer;
+            width: auto;
+            display: inline-block;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-to-top:hover {
+            background-color: #FFA000;
+            transform: scale(1.1);  /* Efecto de aumento al pasar el mouse */
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+        }
+
+        footer p {
+            margin: 0;
+        }

@@ -1,0 +1,86 @@
+
+body {
+    font-family: 'Heebo', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-section {
+    padding: 60px 0;
+}
+
+.menu-section h5 {
+    font-size: 1.5rem;
+    color: #FFC107;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.menu-section h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 30px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center
+    align-items-center;
+    margin-bottom: 20px;
+}
+
+.menu-item img {
+    border-radius: 10px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.menu-item h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+}
+
+.menu-item .price {
+    color: #FFC107;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.menu-item small {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Estilos para la barra de navegación */
+nav {
+    background-color: #343a40;
+}
+
+nav .navbar-brand, nav .navbar-nav a {
+    color: white !important;
+}
+
+/* Estilo para el botón de retorno al inicio */
+.back-to-top {
+    background-color: #FFC107;
+    color: white;
+    text-align: center;
+    padding: 10px 25px;
+    margin-top: 15px;
+    cursor: pointer;
+    width: auto;
+    display: inline-block;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-to-top:hover {
+    background-color: #FFA000;
+    transform: scale(1.1);  /* Efecto de aumento al pasar el mouse */
+}

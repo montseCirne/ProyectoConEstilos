@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Restaurante Italiano</title>
+    <style>
+        body {
+    font-family: 'Heebo', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.auth-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0 15px;
+}
+
+.auth-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+.auth-container h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #FFC107;
+}
+
+.auth-container .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-container .form-control {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.auth-container .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #FFC107;
+    color: white;
+    border: none;
+}
+
+.auth-container .btn:hover {
+    background-color: #FFA000;
+}
+
+.auth-container .form-text {
+    font-size: 0.9rem;
+}
+
+.auth-toggle {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.auth-toggle a {
+    color: #FFC107;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-toggle a:hover {
+    color: #FFA000;
+}
+
+.auth-section .card {
+    border: none;
+}
+
+nav {
+    background-color: #343a40;
+}
+
+nav .navbar-brand, nav .navbar-nav a {
+    color: white !important;
+}
+
+/* Estilo para el botón de retorno al inicio */
+.back-to-top {
+    background-color: #FFC107;
+    color: white;
+    text-align: center;
+    padding: 10px 25px;
+    margin-top: 15px;
+    cursor: pointer;
+    width: auto;
+    display: inline-block;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-to-top:hover {
+    background-color: #FFA000;
+    transform: scale(1.1);  /* Efecto de aumento al pasar el mouse */
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+        <a href="/" class="navbar-brand p-0">
+            <h1 class="m-0"><i class="fa fa-utensils me-3"></i>Tribitalian</h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-2 pe-4 btn py-2 px-4">
+                <div class="text-center">
+                    <a href="/index.html" class="back-to-top">Regresar al Inicio</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-section">
+        <div class="auth-container">
+            <!-- Login Form -->
+            <div class="login-form">
+                <h2>Iniciar Sesión</h2>
+                <form action="/login" method="POST">
+                    <!-- Usuario o Correo -->
+                    <div class="form-group">
+                        <label for="username">Usuario o Correo</label>
+                        <input type="text" class="form-control" id="correo" name="correo" placeholder="Introduce tu usuario o correo" required>
+                    </div>
+                    <!-- Contraseña -->
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="contraseña" placeholder="Introduce tu contraseña" required>
+                    </div>
+                    <!-- Botón de Login -->
+                    <button type="submit" class="btn">Iniciar Sesión</button>
+                </form>
+
+                <!-- Mostrar errores si los hay -->
+                {{#if error}}
+                    <div class="alert alert-danger mt-3">
+                        <strong>Error:</strong> {{error}}
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

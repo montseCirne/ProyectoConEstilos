@@ -1,0 +1,20 @@
+<h1>Panel de Administración</h1>
+<h2>Usuarios</h2>
+<ul>
+  {{#each usuarios}}
+    <li>{{this.nombre}} ({{this.rol}})</li>
+  {{/each}}
+</ul>
+<h2>Mesas</h2>
+<ul>
+  {{#each mesas}}
+    <li>Mesa {{this.numero}} - {{this.estado}}</li>
+  {{/each}}
+</ul>
+<h2>Comandas</h2>
+<ul>
+  {{#each comandas}}
+    <li>Mesa: {{this.idMesa}}, Estado: {{this.estado}}</li>
+  {{/each}}
+</ul>
+<a href="/login">Cerrar sesión</a>
