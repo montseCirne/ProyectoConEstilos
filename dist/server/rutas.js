@@ -3,12 +3,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.registrarUsuario = registrarUsuario;
 exports.registerFormRoutesUser = registerFormRoutesUser;
 const passport_1 = __importDefault(require("passport"));
 const passport_config_1 = require("./auth/passport_config");
+const orm_auth_models_1 = require("./auth/orm_auth_models");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 function obtenerRol(req) {
     return req.user ? req.user.rol : undefined;
 }
+// Registrar un nuevo usuario
+async function registrarUsuario(req, res, next) {
+    const { nombre, correo, contrasena, rol } = req.body;
+    // Validaciones básicas (se pueden extender)
+    if (!nombre || !correo || !contrasena || !rol) {
+        res.status(400).send("Todos los campos son requeridos.");
+    }
+    try {
+        // Cifrar la contraseña antes de guardarla
+        const hashedPassword = await bcrypt_1.default.hash(contrasena, 10);
+        // Crear un nuevo usuario
+        const nuevoUsuario = new orm_auth_models_1.UsuarioModel({
+            nombre,
+            correo,
+            contrasena: hashedPassword, // Guardamos la contraseña cifrada
+            rol,
+        });
+        // Guardar el usuario en la base de datos
+        await nuevoUsuario.save();
+        res.redirect("/admin"); // Redirigir a la página de administración después de crear el usuario
+    }
+    catch (err) {
+        console.error("Error al crear el usuario: ", err);
+        res.status(500).send("Hubo un error al crear el usuario.");
+    }
+}
+// Registrar las rutas
 function registerFormRoutesUser(app) {
     // Ruta para el formulario de login
     app.get("/login", (req, res) => {
@@ -22,6 +52,8 @@ function registerFormRoutesUser(app) {
     }), (req, res) => {
         console.log('Usuario autenticado', req.user); // Aquí puedes revisar el estado del usuario
     });
+    // Ruta para registrar un nuevo usuario
+    app.post("/admin/crearUsuario", registrarUsuario);
     // Ruta para redirigir según el rol del usuario
     app.get("/redirect", passport_config_1.isAuthenticated, (req, res) => {
         const rol = obtenerRol(req);

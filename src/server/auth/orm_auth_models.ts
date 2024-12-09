@@ -152,11 +152,13 @@ ComandaModel.belongsTo(UsuarioModel, { foreignKey: 'meseroId', as: 'mesero' });
 
 // Relación entre Platillo y Comanda (Indirecta, usando el campo platillos con id y cantidad)
 PlatilloModel.hasMany(ComandaModel, { foreignKey: 'platilloId', as: 'comandas', onDelete: 'CASCADE' });
-ComandaModel.belongsTo(PlatilloModel, { foreignKey: 'platilloId', as: 'platillos' });
+ComandaModel.belongsTo(PlatilloModel, { foreignKey: 'platilloId', as: 'platillosComanda' });  // Cambié 'platillos' a 'platillosComanda'
+
 
 // Relación entre Bebida y Comanda (Indirecta, usando el campo bebidas con id y cantidad)
 BebidaModel.hasMany(ComandaModel, { foreignKey: 'bebidaId', as: 'comandas', onDelete: 'CASCADE' });
-ComandaModel.belongsTo(BebidaModel, { foreignKey: 'bebidaId', as: 'bebidas' });
+ComandaModel.belongsTo(BebidaModel, { foreignKey: 'bebidaId', as: 'bebidasComanda' });  // Cambié 'bebidas' a 'bebidasComanda'
+
 
 
 // Sincronización

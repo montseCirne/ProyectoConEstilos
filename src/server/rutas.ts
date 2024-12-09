@@ -3,13 +3,14 @@ import passport from "passport";
 import { isAuthenticated } from "./auth/passport_config"; 
 import { Request, Response, NextFunction} from "express";
 import { UsuarioModel } from "./auth/orm_auth_models";
+import bcrypt from 'bcrypt';
 
 function obtenerRol(req: any): string | undefined {
   return req.user ? req.user.rol : undefined;
 }
 
 // Registrar un nuevo usuario
-export function registrarUsuario(req: Request, res: Response, next: NextFunction): void {
+export async function registrarUsuario(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { nombre, correo, contrasena, rol } = req.body;
 
   // Validaciones básicas (se pueden extender)
@@ -17,23 +18,26 @@ export function registrarUsuario(req: Request, res: Response, next: NextFunction
     res.status(400).send("Todos los campos son requeridos.");
   }
 
-  // Crear un nuevo usuario
-  const nuevoUsuario = new UsuarioModel({
-    nombre,
-    correo,
-    contrasena, // Recuerda cifrar la contraseña antes de guardarla
-    rol
-  });
+  try {
+    // Cifrar la contraseña antes de guardarla
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-  // Guardar el usuario en la base de datos
-  nuevoUsuario.save()
-    .then(() => {
-      res.redirect("/admin");  // Redirigir a la página de administración después de crear el usuario
-    })
-    .catch((err) => {
-      console.error("Error al crear el usuario: ", err);
-      res.status(500).send("Hubo un error al crear el usuario.");
+    // Crear un nuevo usuario
+    const nuevoUsuario = new UsuarioModel({
+      nombre,
+      correo,
+      contrasena: hashedPassword, // Guardamos la contraseña cifrada
+      rol,
     });
+
+    // Guardar el usuario en la base de datos
+    await nuevoUsuario.save();
+    res.redirect("/admin");  // Redirigir a la página de administración después de crear el usuario
+
+  } catch (err) {
+    console.error("Error al crear el usuario: ", err);
+    res.status(500).send("Hubo un error al crear el usuario.");
+  }
 }
 
 // Registrar las rutas

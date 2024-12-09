@@ -41,7 +41,7 @@ expressApp.use(passport.initialize());
 expressApp.use(passport.session());
 
 // Rutas para formularios de usuario (registrar, login, etc.)
-registerFormRoutesUser(expressApp);  // Asegúrate de pasar 'expressApp' aquí
+registerFormRoutesUser(expressApp);  
 
 // Servir archivos estáticos como CSS y JS desde la carpeta "static"
 expressApp.use(express.static(path.join(__dirname, "../../static")));

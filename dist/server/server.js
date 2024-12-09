@@ -37,7 +37,7 @@ expressApp.use((0, express_session_1.default)({
 expressApp.use(passport_1.default.initialize());
 expressApp.use(passport_1.default.session());
 // Rutas para formularios de usuario (registrar, login, etc.)
-(0, rutas_1.registerFormRoutesUser)(expressApp);
+(0, rutas_1.registerFormRoutesUser)(expressApp); // Asegúrate de pasar 'expressApp' aquí
 // Servir archivos estáticos como CSS y JS desde la carpeta "static"
 expressApp.use(express_1.default.static(path_1.default.join(__dirname, "../../static")));
 // Redirigir la raíz a la página de login
