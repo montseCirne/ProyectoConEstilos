@@ -17,7 +17,7 @@ export async function registrarUsuario(req: Request, res: Response, next: NextFu
   // Validación de los campos
   if (!nombre || !correo || !contrasena || !rol) {
     req.flash('error', 'Todos los campos son requeridos.');
-    return res.redirect('/admin'); // Redirigir al formulario con el mensaje de error
+    return res.redirect('/admin/'); // Redirigir al formulario con el mensaje de error
   }
 
   const store = new AuthStore();  // Crear una instancia de AuthStore
@@ -83,6 +83,22 @@ export function registerFormRoutesUser(app: Express) {
       console.log("No se pudo determinar el rol del usuario. Redirigiendo al login.");
     }
   });
+
+  // Ruta para mostrar el formulario de crear usuario
+app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) => {
+  const rol = obtenerRol(req);
+  if (rol === 'administrador') {
+    // Renderiza el formulario para crear un nuevo usuario
+    res.render("crearUsuario", {
+      user: req.user,
+      success: req.flash('success'),
+      error: req.flash('error'),
+    });
+  } else {
+    res.status(403).send("Acceso no autorizado");
+  }
+});
+
 
   // Rutas para los menús, accesibles solo para usuarios autenticados y con el rol adecuado
   app.get("/admin", isAuthenticated, async (req, res) => {
@@ -163,20 +179,30 @@ export function registerFormRoutesUser(app: Express) {
     }
   });
 
+
+    //PASAR A LA VSTA
   app.get('/usuarios/:id/editar', async (req, res) => {
     try {
       const usuarioId = req.params.id;
       const usuario = await UsuarioModel.findByPk(usuarioId);
+  
       if (!usuario) {
         return res.redirect('/admin?error=Usuario no encontrado');
       }
-      // Pasamos el usuario a la vista de edición
-      res.render('editarUsuario', { usuario });
+  
+      // Preparamos los valores del rol para pasarlos a la vista
+      const roles = ['mesero', 'cocinero', 'administrador'];
+  
+      res.render('editarUsuario', {
+        usuario,
+        roles,  // Pasamos los roles para la vista
+      });
     } catch (error) {
       console.error('Error al recuperar el usuario:', error);
       res.redirect('/admin?error=Error al cargar los datos del usuario');
     }
   });
+  
 
   // Ruta para eliminar un usuario
   app.post('/usuarios/:id/eliminar', async (req, res) => {

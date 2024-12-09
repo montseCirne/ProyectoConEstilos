@@ -24,7 +24,18 @@ expressApp.use(express_1.default.urlencoded({ extended: true }));
 expressApp.use(express_1.default.json());
 // Configurar el motor de plantillas Handlebars
 expressApp.set("views", path_1.default.join(__dirname, "../../templates/server"));
-expressApp.engine("handlebars", (0, express_handlebars_1.engine)());
+expressApp.engine("handlebars", (0, express_handlebars_1.engine)({
+    helpers: {
+        ifCond: (a, b, options) => {
+            if (a === b) {
+                return options.fn(this); // Si son iguales, ejecutar el bloque 'fn'
+            }
+            else {
+                return options.inverse(this); // Si no son iguales, ejecutar el bloque 'inverse'
+            }
+        }
+    }
+}));
 expressApp.set("view engine", "handlebars");
 // Seguridad: proteger la aplicación con Helmet
 expressApp.use((0, helmet_1.default)());

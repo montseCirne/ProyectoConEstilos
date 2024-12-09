@@ -1,25 +1,16 @@
-{{#if success}}
-  <div class="alert alert-success">{{success}}</div>
-{{/if}}
-
-{{#if error}}
-  <div class="alert alert-danger">{{error}}</div>
-{{/if}}
-
-
 <h2>Editar Usuario</h2>
-<form method="POST" action="/usuarios/{{usuario.id}}/editar">
+<form method="POST" action="/usuarios/{{usuario.dataValues.id}}/editar">
   <label for="nombre">Nombre:</label>
-  <input type="text" name="nombre" value="{{usuario.nombre}}" required>
+  <input type="text" name="nombre" value="{{usuario.dataValues.nombre}}" required>
   
   <label for="correo">Correo:</label>
-  <input type="email" name="correo" value="{{usuario.correo}}" required>
+  <input type="email" name="correo" value="{{usuario.dataValues.correo}}" required>
   
   <label for="rol">Rol:</label>
   <select name="rol">
-    <option value="mesero" {{#ifEquals usuario.rol "mesero"}}selected{{/ifEquals}}>Mesero</option>
-    <option value="cocinero" {{#ifEquals usuario.rol "cocinero"}}selected{{/ifEquals}}>Cocinero</option>
-    <option value="administrador" {{#ifEquals usuario.rol "administrador"}}selected{{/ifEquals}}>Administrador</option>
+    {{#each roles}}
+      <option value="{{this}}" {{#ifCond usuario.dataValues.rol this}}selected{{/ifCond}}>{{this}}</option>
+    {{/each}}
   </select>
 
   <label for="contrasena">Contraseña (Dejar en blanco para no cambiar):</label>

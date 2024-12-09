@@ -70,21 +70,9 @@
 </table>
 
 <h2>Gestionar Usuarios</h2>
-<form method="POST" action="/admin/crearUsuario">
-  <label for="">Nombre:</label>
-  <input type="text" name="nombre" required>
-  <label for="">Correo: </label>
-  <input type="email" name="correo" required>
-  <label for="">Contraseña:</label>
-  <input type="password" name="contrasena" required> 
-  <label for="">Rol:</label>
-  <select name="rol">
-    <option value="mesero">Mesero</option>
-    <option value="cocinero">Cocinero</option>
-    <option value="administrador">Administrador</option>
-  </select>
-  <button type="submit">Crear Usuario</button>
-</form>
+<a href="/admin/crearUsuario">
+  <button class="btn btn-primary">Agregar Nuevo Usuario</button>
+</a>
 
 <h2>Usuarios</h2>
 <table>

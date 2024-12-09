@@ -156,6 +156,7 @@ function registerFormRoutesUser(app) {
             res.redirect('/admin?error=Error al actualizar el estado de la mesa');
         }
     });
+    //PASAR A LA VSTA
     app.get('/usuarios/:id/editar', async (req, res) => {
         try {
             const usuarioId = req.params.id;
@@ -163,8 +164,12 @@ function registerFormRoutesUser(app) {
             if (!usuario) {
                 return res.redirect('/admin?error=Usuario no encontrado');
             }
-            // Pasamos el usuario a la vista de edición
-            res.render('editarUsuario', { usuario });
+            // Preparamos los valores del rol para pasarlos a la vista
+            const roles = ['mesero', 'cocinero', 'administrador'];
+            res.render('editarUsuario', {
+                usuario,
+                roles, // Pasamos los roles para la vista
+            });
         }
         catch (error) {
             console.error('Error al recuperar el usuario:', error);
@@ -187,13 +192,16 @@ function registerFormRoutesUser(app) {
         try {
             const usuarioId = req.params.id;
             const { nombre, correo, contrasena, rol } = req.body;
-            // Si la contraseña ha sido modificada, la encriptamos
-            const hashedPassword = contrasena ? await bcrypt.hash(contrasena, 10) : undefined;
-            // Actualizamos los datos del usuario
+            // Encriptar la contraseña solo si se ha proporcionado una nueva
+            let hashedPassword;
+            if (contrasena) {
+                hashedPassword = await bcrypt.hash(contrasena, 10);
+            }
+            // Actualizamos los datos del usuario, asegurándonos de no sobrescribir la contraseña si no fue proporcionada
             await orm_auth_models_1.UsuarioModel.update({
                 nombre,
                 correo,
-                contraseña: hashedPassword || undefined, // No actualizamos la contraseña si no se ha modificado
+                contraseña: hashedPassword || undefined, // Solo actualizamos la contraseña si se ha proporcionado
                 rol,
             }, { where: { id: usuarioId } });
             res.redirect('/admin?success=Usuario actualizado exitosamente');

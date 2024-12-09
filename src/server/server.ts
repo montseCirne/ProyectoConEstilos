@@ -8,6 +8,7 @@ import session from "express-session";
 import path from "path";
 import flash from 'connect-flash';
 import { registerFormRoutesUser } from "./rutas"; // Importar las rutas definidas
+import Handlebars from "handlebars";  // Importar Handlebars para usar los tipos
 
 const port = 5000;
 const expressApp: Express = express();
@@ -23,7 +24,17 @@ expressApp.use(express.json());
 
 // Configurar el motor de plantillas Handlebars
 expressApp.set("views", path.join(__dirname, "../../templates/server"));
-expressApp.engine("handlebars", engine());
+expressApp.engine("handlebars", engine({
+  helpers: {
+    ifCond: (a: string, b: string, options: Handlebars.HelperOptions) => {
+      if (a === b) {
+        return options.fn(this); // Si son iguales, ejecutar el bloque 'fn'
+      } else {
+        return options.inverse(this); // Si no son iguales, ejecutar el bloque 'inverse'
+      }
+    }
+  }
+}));
 expressApp.set("view engine", "handlebars");
 
 // Seguridad: proteger la aplicación con Helmet
@@ -43,7 +54,7 @@ expressApp.use(passport.initialize());
 expressApp.use(passport.session());
 
 // Rutas para formularios de usuario (registrar, login, etc.)
-registerFormRoutesUser(expressApp);  
+registerFormRoutesUser(expressApp);
 
 // Servir archivos estáticos como CSS y JS desde la carpeta "static"
 expressApp.use(express.static(path.join(__dirname, "../../static")));
@@ -58,17 +69,16 @@ expressApp.use((req, res) => {
 
 expressApp.use(helmet.contentSecurityPolicy({
   directives: {
-    defaultSrc: ["'self'"], 
+    defaultSrc: ["'self'"],
     scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],  // Agregar CDN de fuentes
-    styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"], 
-    fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"], 
+    styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+    fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
     imgSrc: ["'self'", "data:"],
     connectSrc: ["'self'"],
     objectSrc: ["'none'"],
     upgradeInsecureRequests: []
   }
 }));
-
 
 // Configuración de WebSocket
 const server = createServer(expressApp);
