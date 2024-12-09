@@ -10,6 +10,7 @@ const passport_config_1 = require("./auth/passport_config");
 const orm_auth_store_1 = require("./auth/orm_auth_store");
 const orm_auth_models_1 = require("./auth/orm_auth_models");
 const helmet_1 = __importDefault(require("helmet"));
+const bcrypt = require('bcrypt');
 function obtenerRol(req) {
     return req.user ? req.user.rol : undefined;
 }
@@ -155,6 +156,22 @@ function registerFormRoutesUser(app) {
             res.redirect('/admin?error=Error al actualizar el estado de la mesa');
         }
     });
+    // Ruta para mostrar el formulario de edición de usuario
+    app.get('/usuarios/:id/editar', async (req, res) => {
+        try {
+            const usuarioId = req.params.id;
+            const usuario = await orm_auth_models_1.UsuarioModel.findByPk(usuarioId);
+            if (!usuario) {
+                return res.redirect('/admin?error=Usuario no encontrado');
+            }
+            // Pasamos el usuario a la vista de edición
+            res.render('editarUsuario', { usuario });
+        }
+        catch (error) {
+            console.error('Error al recuperar el usuario:', error);
+            res.redirect('/admin?error=Error al cargar los datos del usuario');
+        }
+    });
     // Ruta para eliminar un usuario
     app.post('/usuarios/:id/eliminar', async (req, res) => {
         try {
@@ -165,6 +182,26 @@ function registerFormRoutesUser(app) {
         catch (error) {
             console.error('Error al eliminar el usuario:', error);
             res.redirect('/admin?error=Error al eliminar el usuario');
+        }
+    });
+    app.post('/usuarios/:id/editar', async (req, res) => {
+        try {
+            const usuarioId = req.params.id;
+            const { nombre, correo, contrasena, rol } = req.body;
+            // Si la contraseña ha sido modificada, la encriptamos
+            const hashedPassword = contrasena ? await bcrypt.hash(contrasena, 10) : undefined;
+            // Actualizamos los datos del usuario
+            await orm_auth_models_1.UsuarioModel.update({
+                nombre,
+                correo,
+                contraseña: hashedPassword || undefined, // No actualizamos la contraseña si no se ha modificado
+                rol,
+            }, { where: { id: usuarioId } });
+            res.redirect('/admin?success=Usuario actualizado exitosamente');
+        }
+        catch (error) {
+            console.error('Error al actualizar el usuario:', error);
+            res.redirect('/admin?error=Error al actualizar el usuario');
         }
     });
 }

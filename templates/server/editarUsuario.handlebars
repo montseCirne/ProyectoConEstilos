@@ -2,22 +2,19 @@
 <form method="POST" action="/usuarios/{{usuario.id}}/editar">
   <label for="nombre">Nombre:</label>
   <input type="text" name="nombre" value="{{usuario.nombre}}" required>
-
+  
   <label for="correo">Correo:</label>
   <input type="email" name="correo" value="{{usuario.correo}}" required>
-
-  <label for="contrasena">Contraseña:</label>
-  <input type="password" name="contrasena">
-
+  
   <label for="rol">Rol:</label>
   <select name="rol">
-    <option value="mesero" {{#ifCond usuario.rol '==' 'mesero'}}selected{{/ifCond}}>Mesero</option>
-    <option value="cocinero" {{#ifCond usuario.rol '==' 'cocinero'}}selected{{/ifCond}}>Cocinero</option>
-    <option value="administrador" {{#ifCond usuario.rol '==' 'administrador'}}selected{{/ifCond}}>Administrador</option>
+    <option value="mesero" {{#ifEquals usuario.rol "mesero"}}selected{{/ifEquals}}>Mesero</option>
+    <option value="cocinero" {{#ifEquals usuario.rol "cocinero"}}selected{{/ifEquals}}>Cocinero</option>
+    <option value="administrador" {{#ifEquals usuario.rol "administrador"}}selected{{/ifEquals}}>Administrador</option>
   </select>
-
+  
+  <label for="contrasena">Contraseña:</label>
+  <input type="password" name="contrasena">
+  
   <button type="submit">Guardar Cambios</button>
 </form>
-
-<!-- Botón para volver al menú -->
-<a href="/admin">Volver al menú de administración</a>
