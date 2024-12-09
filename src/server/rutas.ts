@@ -84,13 +84,23 @@ export function registerFormRoutesUser(app: Express) {
   });
 
   // Rutas para los menús, accesibles solo para usuarios autenticados y con el rol adecuado
-  app.get("/admin", isAuthenticated, (req, res) => {
+  app.get("/admin", isAuthenticated, async (req, res) => {
     const rol = obtenerRol(req);
     if (rol === 'administrador') {
-      res.render("menuAdmin", { 
-        user: req.user, 
-        success: req.flash('success'), 
-        error: req.flash('error') });
+      try {
+        const mesas = await MesaModel.findAll();  
+        console.log(mesas);
+  
+        res.render("menuAdmin", { 
+          user: req.user, 
+          success: req.flash('success'), 
+          error: req.flash('error'),
+          mesas: mesas 
+        });
+      } catch (err) {
+        console.error("Error al obtener las mesas: ", err);
+        res.status(500).send("Error al obtener las mesas");
+      }
     } else {
       res.status(403).send("Acceso no autorizado");
     }
@@ -114,28 +124,6 @@ export function registerFormRoutesUser(app: Express) {
     }
   });
 
-  app.get("/admin", isAuthenticated, async (req, res) => {
-    const rol = obtenerRol(req);
-    if (rol === 'administrador') {
-      try {
-        // Obtener todas las mesas desde la base de datos
-        const mesas = await MesaModel.findAll();  // Asegúrate de que este método esté disponible con tu ORM
-  
-        res.render("menuAdmin", { 
-          user: req.user, 
-          success: req.flash('success'), 
-          error: req.flash('error'),
-          mesas: mesas // Pasar las mesas a la vista
-        });
-      } catch (err) {
-        console.error("Error al obtener las mesas: ", err);
-        res.status(500).send("Error al obtener las mesas");
-      }
-    } else {
-      res.status(403).send("Acceso no autorizado");
-    }
-  });
-
   app.use(helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"], 
@@ -148,7 +136,5 @@ export function registerFormRoutesUser(app: Express) {
       upgradeInsecureRequests: []
     }
   }));
-  
-  
   
 }
