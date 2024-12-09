@@ -3,9 +3,11 @@ import passport from "passport";
 import { isAuthenticated } from "./auth/passport_config"; 
 import { Request, Response, NextFunction} from "express";
 import { AuthStore } from './auth/orm_auth_store'; 
-import { MesaModel, UsuarioModel } from './auth/orm_auth_models';
+import { MesaModel, UsuarioModel , ComandaModel} from './auth/orm_auth_models';
 import helmet from "helmet";
 const bcrypt = require('bcrypt');
+import { obtenerTodasLasComandas} from './auth/orm_auth_store';  // Asegúrate de importar las funciones
+
 
 function obtenerRol(req: any): string | undefined {
   return req.user ? req.user.rol : undefined;
@@ -244,7 +246,6 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
       res.redirect('/admin?error=Error al actualizar el usuario');
     }
   });
-  
   
 
   

@@ -10,11 +10,13 @@
     <th>Acción</th>
   </tr>
   {{#each mesas}}
-  <tr>
-    <td>{{this.numero}}</td>
-    <td>{{this.estado}}</td>
-    <td><a href="/comanda/nueva/{{this.id}}">Tomar Orden</a></td>
-  </tr>
+    <tr>
+      <td>{{this.dataValues.numero}}</td> <!-- Número de la mesa -->
+      <td>{{this.dataValues.estado}}</td>  <!-- Estado de la mesa -->
+      <td>
+        <a href="/comanda/nueva/{{this.dataValues.id}}">Tomar Orden</a> <!-- Siempre mostrar "Tomar Orden" -->
+      </td>
+    </tr>
   {{/each}}
 </table>
 
@@ -22,6 +24,6 @@
 <p>Estas son las comandas que has tomado:</p>
 <ul>
   {{#each comandas}}
-  <li>Comanda #{{this.id}} - Estado: {{this.estado}}</li>
+    <li>Comanda #{{this.dataValues.id}} - Estado: {{this.dataValues.estado}}</li>
   {{/each}}
 </ul>

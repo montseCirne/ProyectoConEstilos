@@ -19,7 +19,7 @@ async function registrarUsuario(req, res, next) {
     // Validación de los campos
     if (!nombre || !correo || !contrasena || !rol) {
         req.flash('error', 'Todos los campos son requeridos.');
-        return res.redirect('/admin'); // Redirigir al formulario con el mensaje de error
+        return res.redirect('/admin/'); // Redirigir al formulario con el mensaje de error
     }
     const store = new orm_auth_store_1.AuthStore(); // Crear una instancia de AuthStore
     try {
@@ -76,6 +76,21 @@ function registerFormRoutesUser(app) {
         else {
             res.redirect('/login'); // Si no hay usuario autenticado
             console.log("No se pudo determinar el rol del usuario. Redirigiendo al login.");
+        }
+    });
+    // Ruta para mostrar el formulario de crear usuario
+    app.get("/admin/crearUsuario", passport_config_1.isAuthenticated, (req, res) => {
+        const rol = obtenerRol(req);
+        if (rol === 'administrador') {
+            // Renderiza el formulario para crear un nuevo usuario
+            res.render("crearUsuario", {
+                user: req.user,
+                success: req.flash('success'),
+                error: req.flash('error'),
+            });
+        }
+        else {
+            res.status(403).send("Acceso no autorizado");
         }
     });
     // Rutas para los menús, accesibles solo para usuarios autenticados y con el rol adecuado
