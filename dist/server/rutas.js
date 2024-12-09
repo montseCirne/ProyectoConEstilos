@@ -156,7 +156,6 @@ function registerFormRoutesUser(app) {
             res.redirect('/admin?error=Error al actualizar el estado de la mesa');
         }
     });
-    // Ruta para mostrar el formulario de edición de usuario
     app.get('/usuarios/:id/editar', async (req, res) => {
         try {
             const usuarioId = req.params.id;

@@ -1,3 +1,12 @@
+{{#if success}}
+  <div class="alert alert-success">{{success}}</div>
+{{/if}}
+
+{{#if error}}
+  <div class="alert alert-danger">{{error}}</div>
+{{/if}}
+
+
 <h2>Editar Usuario</h2>
 <form method="POST" action="/usuarios/{{usuario.id}}/editar">
   <label for="nombre">Nombre:</label>
@@ -12,8 +21,8 @@
     <option value="cocinero" {{#ifEquals usuario.rol "cocinero"}}selected{{/ifEquals}}>Cocinero</option>
     <option value="administrador" {{#ifEquals usuario.rol "administrador"}}selected{{/ifEquals}}>Administrador</option>
   </select>
-  
-  <label for="contrasena">Contraseña:</label>
+
+  <label for="contrasena">Contraseña (Dejar en blanco para no cambiar):</label>
   <input type="password" name="contrasena">
   
   <button type="submit">Guardar Cambios</button>
