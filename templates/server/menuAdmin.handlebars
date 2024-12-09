@@ -26,35 +26,30 @@
 <p>Este es el menú del Administrador.</p>
 <a href="/login">Cerrar sesión</a>
 
-// Ruta para cambiar el estado de la mesa a "disponible"
-app.post('/mesas/:id/disponible', async (req, res) => {
-  try {
-    const mesaId = req.params.id;
-    await Mesa.update({ estado: 'disponible' }, { where: { id: mesaId } });
-    
-    // Responde con éxito y el nuevo estado de la mesa
-    res.json({ success: true, estado: 'disponible', mesaId: mesaId });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
-  }
-});
-
-// Ruta para cambiar el estado de la mesa a "ocupada"
-app.post('/mesas/:id/ocupada', async (req, res) => {
-  try {
-    const mesaId = req.params.id;
-    await Mesa.update({ estado: 'ocupada' }, { where: { id: mesaId } });
-    
-    // Responde con éxito y el nuevo estado de la mesa
-    res.json({ success: true, estado: 'ocupada', mesaId: mesaId });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
-  }
-});
-
-
+<h2>Mesas</h2>
+<table>
+  <tr>
+    <th>Mesa</th>
+    <th>Estado</th>
+    <th>Acción</th>
+  </tr>
+  {{#each mesas}}  <!-- Iterar sobre las mesas -->
+    <tr>
+      <td>{{this.dataValues.numero}}</td>  <!-- Mostrar el número de la mesa -->
+      <td>{{this.dataValues.estado}}</td>  <!-- Mostrar el estado de la mesa -->
+      <td>
+        <!-- Formulario para cambiar el estado a "disponible" -->
+        <form action="/mesas/{{this.dataValues.id}}/disponible" method="POST">
+          <button type="submit" class="btn btn-success">Disponible</button>
+        </form>
+        <!-- Formulario para cambiar el estado a "ocupada" -->
+        <form action="/mesas/{{this.dataValues.id}}/ocupada" method="POST">
+          <button type="submit" class="btn btn-danger">Ocupada</button>
+        </form>
+      </td>
+    </tr>
+  {{/each}}
+</table>
 
 <h2>Comandas</h2>
 <table>
@@ -90,3 +85,26 @@ app.post('/mesas/:id/ocupada', async (req, res) => {
   </select>
   <button type="submit">Crear Usuario</button>
 </form>
+
+<h2>Usuarios</h2>
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Rol</th>
+    <th>Acción</th>
+  </tr>
+  {{#each usuarios}} <!-- Iterar sobre los usuarios -->
+    <tr>
+      <td>{{this.nombre}}</td> <!-- Mostrar el nombre del usuario -->
+      <td>{{this.correo}}</td> <!-- Mostrar el correo del usuario -->
+      <td>{{this.rol}}</td> <!-- Mostrar el rol del usuario -->
+      <td>
+        <a href="/usuarios/{{this.id}}/editar">Editar</a> | 
+        <form action="/usuarios/{{this.id}}/eliminar" method="POST" style="display:inline;">
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </td> <!-- Acción para editar o eliminar el usuario -->
+    </tr>
+  {{/each}}
+</table>

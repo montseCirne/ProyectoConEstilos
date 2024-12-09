@@ -83,7 +83,7 @@ function registerFormRoutesUser(app) {
         if (rol === 'administrador') {
             try {
                 const mesas = await orm_auth_models_1.MesaModel.findAll();
-                console.log(mesas);
+                const usuarios = await orm_auth_models_1.UsuarioModel.findAll();
                 res.render("menuAdmin", {
                     user: req.user,
                     success: req.flash('success'),
@@ -131,17 +131,15 @@ function registerFormRoutesUser(app) {
         }
     }));
     // Ruta para cambiar el estado de la mesa a "disponible"
-    // Ruta para cambiar el estado de la mesa a "disponible"
     app.post('/mesas/:id/disponible', async (req, res) => {
         try {
             const mesaId = req.params.id;
             await orm_auth_models_1.MesaModel.update({ estado: 'disponible' }, { where: { id: mesaId } });
-            // Responde con éxito y el nuevo estado de la mesa
-            res.json({ success: true, estado: 'disponible', mesaId: mesaId });
+            res.redirect('/admin');
         }
         catch (error) {
             console.error(error);
-            res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+            res.redirect('/admin?error=Error al actualizar el estado de la mesa');
         }
     });
     // Ruta para cambiar el estado de la mesa a "ocupada"
@@ -149,12 +147,11 @@ function registerFormRoutesUser(app) {
         try {
             const mesaId = req.params.id;
             await orm_auth_models_1.MesaModel.update({ estado: 'ocupada' }, { where: { id: mesaId } });
-            // Responde con éxito y el nuevo estado de la mesa
-            res.json({ success: true, estado: 'ocupada', mesaId: mesaId });
+            res.redirect('/admin');
         }
         catch (error) {
             console.error(error);
-            res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+            res.redirect('/admin?error=Error al actualizar el estado de la mesa');
         }
     });
 }

@@ -3,7 +3,7 @@ import passport from "passport";
 import { isAuthenticated } from "./auth/passport_config"; 
 import { Request, Response, NextFunction} from "express";
 import { AuthStore } from './auth/orm_auth_store'; 
-import { MesaModel } from './auth/orm_auth_models';
+import { MesaModel, UsuarioModel } from './auth/orm_auth_models';
 import helmet from "helmet";
 
 function obtenerRol(req: any): string | undefined {
@@ -88,14 +88,15 @@ export function registerFormRoutesUser(app: Express) {
     const rol = obtenerRol(req);
     if (rol === 'administrador') {
       try {
-        const mesas = await MesaModel.findAll();  
-        console.log(mesas);
+        const mesas = await MesaModel.findAll();
+        const usuarios = await UsuarioModel.findAll();  
   
         res.render("menuAdmin", { 
           user: req.user, 
           success: req.flash('success'), 
           error: req.flash('error'),
-          mesas: mesas 
+          mesas: mesas ,
+          usuarios : usuarios
         });
       } catch (err) {
         console.error("Error al obtener las mesas: ", err);
@@ -138,34 +139,27 @@ export function registerFormRoutesUser(app: Express) {
   }));
 
   // Ruta para cambiar el estado de la mesa a "disponible"
-// Ruta para cambiar el estado de la mesa a "disponible"
-app.post('/mesas/:id/disponible', async (req, res) => {
-  try {
-    const mesaId = req.params.id;
-    await MesaModel.update({ estado: 'disponible' }, { where: { id: mesaId } });
-    
-    // Responde con éxito y el nuevo estado de la mesa
-    res.json({ success: true, estado: 'disponible', mesaId: mesaId });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
-  }
-});
+  app.post('/mesas/:id/disponible', async (req, res) => {
+    try {
+      const mesaId = req.params.id;
+      await MesaModel.update({ estado: 'disponible' }, { where: { id: mesaId } });
+      res.redirect('/admin'); 
+    } catch (error) {
+      console.error(error);
+      res.redirect('/admin?error=Error al actualizar el estado de la mesa');
+    }
+  });
 
-// Ruta para cambiar el estado de la mesa a "ocupada"
-app.post('/mesas/:id/ocupada', async (req, res) => {
-  try {
-    const mesaId = req.params.id;
-    await MesaModel.update({ estado: 'ocupada' }, { where: { id: mesaId } });
-    
-    // Responde con éxito y el nuevo estado de la mesa
-    res.json({ success: true, estado: 'ocupada', mesaId: mesaId });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
-  }
-});
-
-
+  // Ruta para cambiar el estado de la mesa a "ocupada"
+  app.post('/mesas/:id/ocupada', async (req, res) => {
+    try {
+      const mesaId = req.params.id;
+      await MesaModel.update({ estado: 'ocupada' }, { where: { id: mesaId } });
+      res.redirect('/admin');  
+    } catch (error) {
+      console.error(error);
+      res.redirect('/admin?error=Error al actualizar el estado de la mesa');
+    }
+  });
   
 }
