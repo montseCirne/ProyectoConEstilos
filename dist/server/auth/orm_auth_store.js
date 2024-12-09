@@ -33,20 +33,20 @@ exports.Comanda = exports.sequelize.define('Comanda', {
     },
     platillos: {
         type: sequelize_1.DataTypes.JSON,
-        allowNull: false
+        allowNull: false,
     },
     bebidas: {
         type: sequelize_1.DataTypes.JSON,
-        allowNull: false
+        allowNull: false,
     },
     notas: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true,
-        defaultValue: ''
+        defaultValue: '',
     },
     estado: {
         type: sequelize_1.DataTypes.ENUM('pendiente', 'en preparación', 'listo'),
-        allowNull: false
+        allowNull: false,
     },
     meseroId: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -55,7 +55,7 @@ exports.Comanda = exports.sequelize.define('Comanda', {
             key: 'id',
         },
         onDelete: 'CASCADE',
-        allowNull: false
+        allowNull: false,
     },
 });
 class AuthStore {

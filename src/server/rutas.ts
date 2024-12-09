@@ -285,7 +285,6 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
       res.status(500).send("Error al verificar la comanda");
     }
   });
-  
-  
+ 
   
 }

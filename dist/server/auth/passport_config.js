@@ -54,6 +54,7 @@ passport_1.default.deserializeUser(async (id, done) => {
             correo: usuario.correo,
             rol: usuario.rol, // Asegúrate de que el rol esté incluido aquí
         });
+        const user = await orm_auth_models_1.UsuarioModel.findByPk(id);
     }
     catch (error) {
         done(error);

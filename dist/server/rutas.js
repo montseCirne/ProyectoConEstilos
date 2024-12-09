@@ -234,6 +234,7 @@ function registerFormRoutesUser(app) {
     app.get('/comandas/verificar/:id', passport_config_1.isAuthenticated, async (req, res) => {
         const { id } = req.params;
         try {
+            // Buscamos la comanda, asegurándonos de que es una instancia de ComandaModel
             const comanda = await orm_auth_models_1.ComandaModel.findOne({
                 where: { id },
                 include: [
@@ -245,10 +246,11 @@ function registerFormRoutesUser(app) {
                 ]
             });
             if (!comanda) {
+                // Si no encontramos la comanda, enviamos un error
                 res.status(404).send("Comanda no encontrada");
-                return; // Terminamos la función después de enviar la respuesta
+                return;
             }
-            // Si la comanda está pendiente o en preparación, se muestra al usuario
+            // Ahora accedemos a la propiedad 'estado' porque comanda es una instancia del modelo
             if (comanda.estado === 'pendiente' || comanda.estado === 'en preparación') {
                 res.render("verComanda", { comanda }); // Asegúrate de tener la vista 'verComanda'
             }
