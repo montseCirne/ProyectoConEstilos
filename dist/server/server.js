@@ -48,6 +48,15 @@ expressApp.get("^/$", (req, res) => res.redirect("/login"));
 expressApp.use((req, res) => {
     proxy.web(req, res);
 });
+expressApp.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; " +
+        "script-src 'self' https://cdn.jsdelivr.net; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data:; " +
+        "font-src 'self'; " +
+        "connect-src 'self';");
+    next();
+});
 // Configuración de WebSocket
 const server = (0, http_1.createServer)(expressApp);
 server.on('upgrade', (req, socket, head) => {

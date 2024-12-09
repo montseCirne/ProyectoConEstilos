@@ -134,4 +134,15 @@ export function registerFormRoutesUser(app: Express) {
       res.status(403).send("Acceso no autorizado");
     }
   });
+
+  app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  });
+
+  app.get('/favicon.ico', (req, res) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  });
+  
+  
 }

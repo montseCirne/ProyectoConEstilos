@@ -8,6 +8,7 @@ exports.registerFormRoutesUser = registerFormRoutesUser;
 const passport_1 = __importDefault(require("passport"));
 const passport_config_1 = require("./auth/passport_config");
 const orm_auth_store_1 = require("./auth/orm_auth_store");
+const orm_auth_models_1 = require("./auth/orm_auth_models");
 function obtenerRol(req) {
     return req.user ? req.user.rol : undefined;
 }
@@ -106,5 +107,31 @@ function registerFormRoutesUser(app) {
         else {
             res.status(403).send("Acceso no autorizado");
         }
+    });
+    app.get("/admin", passport_config_1.isAuthenticated, async (req, res) => {
+        const rol = obtenerRol(req);
+        if (rol === 'administrador') {
+            try {
+                // Obtener todas las mesas desde la base de datos
+                const mesas = await orm_auth_models_1.MesaModel.findAll(); // Asegúrate de que este método esté disponible con tu ORM
+                res.render("menuAdmin", {
+                    user: req.user,
+                    success: req.flash('success'),
+                    error: req.flash('error'),
+                    mesas: mesas // Pasar las mesas a la vista
+                });
+            }
+            catch (err) {
+                console.error("Error al obtener las mesas: ", err);
+                res.status(500).send("Error al obtener las mesas");
+            }
+        }
+        else {
+            res.status(403).send("Acceso no autorizado");
+        }
+    });
+    app.use((req, res, next) => {
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        next();
     });
 }
