@@ -136,5 +136,36 @@ export function registerFormRoutesUser(app: Express) {
       upgradeInsecureRequests: []
     }
   }));
+
+  // Ruta para cambiar el estado de la mesa a "disponible"
+// Ruta para cambiar el estado de la mesa a "disponible"
+app.post('/mesas/:id/disponible', async (req, res) => {
+  try {
+    const mesaId = req.params.id;
+    await MesaModel.update({ estado: 'disponible' }, { where: { id: mesaId } });
+    
+    // Responde con éxito y el nuevo estado de la mesa
+    res.json({ success: true, estado: 'disponible', mesaId: mesaId });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+  }
+});
+
+// Ruta para cambiar el estado de la mesa a "ocupada"
+app.post('/mesas/:id/ocupada', async (req, res) => {
+  try {
+    const mesaId = req.params.id;
+    await MesaModel.update({ estado: 'ocupada' }, { where: { id: mesaId } });
+    
+    // Responde con éxito y el nuevo estado de la mesa
+    res.json({ success: true, estado: 'ocupada', mesaId: mesaId });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+  }
+});
+
+
   
 }

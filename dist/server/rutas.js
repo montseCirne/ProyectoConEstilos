@@ -78,14 +78,23 @@ function registerFormRoutesUser(app) {
         }
     });
     // Rutas para los menús, accesibles solo para usuarios autenticados y con el rol adecuado
-    app.get("/admin", passport_config_1.isAuthenticated, (req, res) => {
+    app.get("/admin", passport_config_1.isAuthenticated, async (req, res) => {
         const rol = obtenerRol(req);
         if (rol === 'administrador') {
-            res.render("menuAdmin", {
-                user: req.user,
-                success: req.flash('success'),
-                error: req.flash('error')
-            });
+            try {
+                const mesas = await orm_auth_models_1.MesaModel.findAll();
+                console.log(mesas);
+                res.render("menuAdmin", {
+                    user: req.user,
+                    success: req.flash('success'),
+                    error: req.flash('error'),
+                    mesas: mesas
+                });
+            }
+            catch (err) {
+                console.error("Error al obtener las mesas: ", err);
+                res.status(500).send("Error al obtener las mesas");
+            }
         }
         else {
             res.status(403).send("Acceso no autorizado");
@@ -109,28 +118,6 @@ function registerFormRoutesUser(app) {
             res.status(403).send("Acceso no autorizado");
         }
     });
-    app.get("/admin", passport_config_1.isAuthenticated, async (req, res) => {
-        const rol = obtenerRol(req);
-        if (rol === 'administrador') {
-            try {
-                // Obtener todas las mesas desde la base de datos
-                const mesas = await orm_auth_models_1.MesaModel.findAll(); // Asegúrate de que este método esté disponible con tu ORM
-                res.render("menuAdmin", {
-                    user: req.user,
-                    success: req.flash('success'),
-                    error: req.flash('error'),
-                    mesas: mesas // Pasar las mesas a la vista
-                });
-            }
-            catch (err) {
-                console.error("Error al obtener las mesas: ", err);
-                res.status(500).send("Error al obtener las mesas");
-            }
-        }
-        else {
-            res.status(403).send("Acceso no autorizado");
-        }
-    });
     app.use(helmet_1.default.contentSecurityPolicy({
         directives: {
             defaultSrc: ["'self'"],
@@ -143,4 +130,31 @@ function registerFormRoutesUser(app) {
             upgradeInsecureRequests: []
         }
     }));
+    // Ruta para cambiar el estado de la mesa a "disponible"
+    // Ruta para cambiar el estado de la mesa a "disponible"
+    app.post('/mesas/:id/disponible', async (req, res) => {
+        try {
+            const mesaId = req.params.id;
+            await orm_auth_models_1.MesaModel.update({ estado: 'disponible' }, { where: { id: mesaId } });
+            // Responde con éxito y el nuevo estado de la mesa
+            res.json({ success: true, estado: 'disponible', mesaId: mesaId });
+        }
+        catch (error) {
+            console.error(error);
+            res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+        }
+    });
+    // Ruta para cambiar el estado de la mesa a "ocupada"
+    app.post('/mesas/:id/ocupada', async (req, res) => {
+        try {
+            const mesaId = req.params.id;
+            await orm_auth_models_1.MesaModel.update({ estado: 'ocupada' }, { where: { id: mesaId } });
+            // Responde con éxito y el nuevo estado de la mesa
+            res.json({ success: true, estado: 'ocupada', mesaId: mesaId });
+        }
+        catch (error) {
+            console.error(error);
+            res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+        }
+    });
 }

@@ -26,21 +26,35 @@
 <p>Este es el menú del Administrador.</p>
 <a href="/login">Cerrar sesión</a>
 
-<h2>Mesas</h2>
-<table>
-  <tr>
-    <th>Mesa</th>
-    <th>Estado</th>
-    <th>Acción</th>
-  </tr>
-  {{#each mesas}}  <!-- Iterar sobre las mesas -->
-    <tr>
-      <td>{{this.numero}}</td>  <!-- Mostrar el número de la mesa -->
-      <td>{{this.estado}}</td>  <!-- Mostrar el estado de la mesa -->
-      <td><a href="/mesas/{{this.id}}/editar">Editar</a></td>  <!-- Enlace para editar la mesa -->
-    </tr>
-  {{/each}}
-</table>
+// Ruta para cambiar el estado de la mesa a "disponible"
+app.post('/mesas/:id/disponible', async (req, res) => {
+  try {
+    const mesaId = req.params.id;
+    await Mesa.update({ estado: 'disponible' }, { where: { id: mesaId } });
+    
+    // Responde con éxito y el nuevo estado de la mesa
+    res.json({ success: true, estado: 'disponible', mesaId: mesaId });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+  }
+});
+
+// Ruta para cambiar el estado de la mesa a "ocupada"
+app.post('/mesas/:id/ocupada', async (req, res) => {
+  try {
+    const mesaId = req.params.id;
+    await Mesa.update({ estado: 'ocupada' }, { where: { id: mesaId } });
+    
+    // Responde con éxito y el nuevo estado de la mesa
+    res.json({ success: true, estado: 'ocupada', mesaId: mesaId });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, error: 'Error al actualizar el estado de la mesa' });
+  }
+});
+
+
 
 <h2>Comandas</h2>
 <table>
@@ -52,9 +66,9 @@
   </tr>
   {{#each comandas}}
   <tr>
-    <td>{{this.id}}</td>
-    <td>{{this.mesaId}}</td>
-    <td>{{this.estado}}</td>
+    <td>{{this.dataValues.id}}</td>
+    <td>{{this.dataValues.mesaId}}</td>
+    <td>{{this.dataValues.estado}}</td>
     <td><a href="/comandas/{{this.id}}/editar">Editar</a></td>
   </tr>
   {{/each}}
