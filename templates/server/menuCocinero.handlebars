@@ -1,3 +1,18 @@
 <h1>Bienvenido, {{user.nombre}}</h1>
 <p>Este es el menú del Cocinero.</p>
 <a href="/login">Cerrar sesión</a>
+
+<h2>Comandas Pendientes</h2>
+<ul>
+  {{#each comandas}}
+  <li>
+    Comanda #{{this.id}} - Estado: {{this.estado}} 
+    {{#ifCond this.estado '==' 'pendiente'}}
+    <a href="/comanda/{{this.id}}/preparando">Marcar como en preparación</a>
+    {{/ifCond}}
+    {{#ifCond this.estado '==' 'en preparación'}}
+    <a href="/comanda/{{this.id}}/listo">Marcar como listo</a>
+    {{/ifCond}}
+  </li>
+  {{/each}}
+</ul>

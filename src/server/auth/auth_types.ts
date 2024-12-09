@@ -12,16 +12,30 @@ export interface Mesa {
   estado: 'disponible' | 'ocupada';
 }
 
+// Interfaz de Platillo
+export interface Platillo {
+  id: number;
+  nombre: string;
+  precio: number;
+}
+
+// Interfaz de Bebida
+export interface Bebida {
+  id: number;
+  nombre: string;
+  precio: number;
+}
+
+// Interfaz de Comanda
 export interface Comanda {
   id: number;
   idMesa: number;
-  idMesero: number; // Relación con el mesero que crea la comanda
-  platillos: string[];
-  bebidas: string[];
+  idMesero: number; 
+  platillos: { platilloId: number; cantidad: number }[];  
+  bebidas: { bebidaId: number; cantidad: number }[];     
   notas?: string;
   estado: 'pendiente' | 'en preparación' | 'listo';
 }
-
   
 export interface AuthStore {
   crearUsuario(usuario: Usuario): Promise<Usuario>;

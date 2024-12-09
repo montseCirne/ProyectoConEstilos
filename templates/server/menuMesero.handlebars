@@ -1,3 +1,27 @@
 <h1>Bienvenido, {{user.nombre}}</h1>
-<p>Este es el menú del mesero.</p>
+<p>Este es el menú del Mesero.</p>
 <a href="/login">Cerrar sesión</a>
+
+<h2>Mesas</h2>
+<table>
+  <tr>
+    <th>Mesa</th>
+    <th>Estado</th>
+    <th>Acción</th>
+  </tr>
+  {{#each mesas}}
+  <tr>
+    <td>{{this.numero}}</td>
+    <td>{{this.estado}}</td>
+    <td><a href="/comanda/nueva/{{this.id}}">Tomar Orden</a></td>
+  </tr>
+  {{/each}}
+</table>
+
+<h2>Comandas</h2>
+<p>Estas son las comandas que has tomado:</p>
+<ul>
+  {{#each comandas}}
+  <li>Comanda #{{this.id}} - Estado: {{this.estado}}</li>
+  {{/each}}
+</ul>
