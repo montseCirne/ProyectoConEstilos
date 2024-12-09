@@ -33,20 +33,20 @@ export const Comanda = sequelize.define('Comanda', {
   },
   platillos: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: false,
   },
   bebidas: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: false,
   },
   notas: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: ''
+    defaultValue: '',
   },
   estado: {
     type: DataTypes.ENUM('pendiente', 'en preparación', 'listo'),
-    allowNull: false
+    allowNull: false,
   },
   meseroId: {
     type: DataTypes.INTEGER,
@@ -55,9 +55,10 @@ export const Comanda = sequelize.define('Comanda', {
       key: 'id',
     },
     onDelete: 'CASCADE',
-    allowNull: false
+    allowNull: false,
   },
 });
+
 
 export class AuthStore {
   // Crear o actualizar usuario

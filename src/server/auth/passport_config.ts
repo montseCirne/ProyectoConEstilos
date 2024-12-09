@@ -57,6 +57,7 @@ passport.deserializeUser(async (id: number, done) => {
       correo: usuario.correo,
       rol: usuario.rol,  // Asegúrate de que el rol esté incluido aquí
     });
+    const user = await UsuarioModel.findByPk(id);
   } catch (error) {
     done(error);
   }

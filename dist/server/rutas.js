@@ -52,6 +52,7 @@ function registerFormRoutesUser(app) {
     });
     // Ruta para registrar un nuevo usuario
     app.post("/admin/crearUsuario", registrarUsuario);
+    app.get('/comandas/verificar/:id', passport_config_1.isAuthenticated);
     // Ruta para redirigir según el rol del usuario
     app.get("/redirect", passport_config_1.isAuthenticated, (req, res) => {
         const rol = obtenerRol(req);
@@ -69,7 +70,7 @@ function registerFormRoutesUser(app) {
                     res.redirect('/cocinero');
                     break;
                 default:
-                    res.redirect('/login'); // Si no tiene rol o hay un error
+                    res.redirect('/login');
                     console.log("No se pudo determinar el rol del usuario. Redirigiendo al login.");
             }
         }
@@ -117,10 +118,14 @@ function registerFormRoutesUser(app) {
             res.status(403).send("Acceso no autorizado");
         }
     });
-    app.get("/mesero", passport_config_1.isAuthenticated, (req, res) => {
+    app.get("/mesero", passport_config_1.isAuthenticated, async (req, res) => {
         const rol = obtenerRol(req);
         if (rol === 'mesero') {
-            res.render("menuMesero", { user: req.user });
+            const mesas = await orm_auth_models_1.MesaModel.findAll();
+            res.render("menuMesero", {
+                user: req.user,
+                mesas: mesas
+            });
         }
         else {
             res.status(403).send("Acceso no autorizado");
@@ -224,6 +229,36 @@ function registerFormRoutesUser(app) {
         catch (error) {
             console.error('Error al actualizar el usuario:', error);
             res.redirect('/admin?error=Error al actualizar el usuario');
+        }
+    });
+    app.get('/comandas/verificar/:id', passport_config_1.isAuthenticated, async (req, res) => {
+        const { id } = req.params;
+        try {
+            const comanda = await orm_auth_models_1.ComandaModel.findOne({
+                where: { id },
+                include: [
+                    {
+                        model: orm_auth_models_1.UsuarioModel, // Información del mesero que realizó la comanda
+                        as: 'mesero',
+                        attributes: ['nombre', 'correo']
+                    }
+                ]
+            });
+            if (!comanda) {
+                res.status(404).send("Comanda no encontrada");
+                return; // Terminamos la función después de enviar la respuesta
+            }
+            // Si la comanda está pendiente o en preparación, se muestra al usuario
+            if (comanda.estado === 'pendiente' || comanda.estado === 'en preparación') {
+                res.render("verComanda", { comanda }); // Asegúrate de tener la vista 'verComanda'
+            }
+            else {
+                res.send("La comanda está lista para ser entregada.");
+            }
+        }
+        catch (error) {
+            console.error("Error al verificar la comanda: ", error);
+            res.status(500).send("Error al verificar la comanda");
         }
     });
 }

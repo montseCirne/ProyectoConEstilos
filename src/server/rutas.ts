@@ -6,8 +6,6 @@ import { AuthStore } from './auth/orm_auth_store';
 import { MesaModel, UsuarioModel , ComandaModel} from './auth/orm_auth_models';
 import helmet from "helmet";
 const bcrypt = require('bcrypt');
-import { obtenerTodasLasComandas} from './auth/orm_auth_store';  // Asegúrate de importar las funciones
-
 
 function obtenerRol(req: any): string | undefined {
   return req.user ? req.user.rol : undefined;
@@ -128,10 +126,14 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
     }
   });
 
-  app.get("/mesero", isAuthenticated, (req, res) => {
+  app.get("/mesero", isAuthenticated, async (req, res) => {
     const rol = obtenerRol(req);
     if (rol === 'mesero') {
-      res.render("menuMesero", { user: req.user });
+      const mesas = await MesaModel.findAll();
+      res.render("menuMesero", { 
+        user: req.user, 
+        mesas: mesas
+       });
     } else {
       res.status(403).send("Acceso no autorizado");
     }
@@ -248,12 +250,13 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
       res.redirect('/admin?error=Error al actualizar el usuario');
     }
   });
-  
+ 
 
-  app.get('/comandas/verificar/:id', isAuthenticated, async (req: Request, res: Response): Promise<void> => {
+  app.get('/comandas/verificar/:id', isAuthenticated,  async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
   
     try {
+      // Buscamos la comanda, asegurándonos de que es una instancia de ComandaModel
       const comanda = await ComandaModel.findOne({ 
         where: { id },
         include: [
@@ -266,11 +269,12 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
       });
   
       if (!comanda) {
+        // Si no encontramos la comanda, enviamos un error
         res.status(404).send("Comanda no encontrada");
-        return; // Terminamos la función después de enviar la respuesta
+        return;
       }
   
-      // Si la comanda está pendiente o en preparación, se muestra al usuario
+      // Ahora accedemos a la propiedad 'estado' porque comanda es una instancia del modelo
       if (comanda.estado === 'pendiente' || comanda.estado === 'en preparación') {
         res.render("verComanda", { comanda }); // Asegúrate de tener la vista 'verComanda'
       } else {
@@ -282,6 +286,6 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
     }
   });
   
-
+  
   
 }

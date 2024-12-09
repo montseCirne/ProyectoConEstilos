@@ -1,0 +1,13 @@
+<h1>Tomar Orden - Mesa {{mesa.numero}}</h1>
+<form action="/comanda/guardar/{{mesa.id}}" method="POST">
+  <h3>Platillos</h3>
+  <input type="text" name="platillos" placeholder="Platillos separados por coma" required><br><br>
+  
+  <h3>Bebidas</h3>
+  <input type="text" name="bebidas" placeholder="Bebidas separadas por coma" required><br><br>
+
+  <h3>Notas</h3>
+  <textarea name="notas" placeholder="Notas (opcional)"></textarea><br><br>
+
+  <button type="submit">Guardar Orden</button>
+</form>

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthStore = exports.Comanda = exports.Mesa = exports.Usuario = exports.sequelize = void 0;
+exports.obtenerTodasLasComandas = obtenerTodasLasComandas;
 const sequelize_1 = require("sequelize");
 const bcrypt = require('bcrypt');
 // Configuración de la base de datos
@@ -135,6 +136,24 @@ class AuthStore {
     }
 }
 exports.AuthStore = AuthStore;
+async function obtenerTodasLasComandas() {
+    try {
+        const comandas = await exports.Comanda.findAll({
+            include: [
+                {
+                    model: exports.Usuario, // Información del mesero que realizó la comanda
+                    as: 'mesero',
+                    attributes: ['nombre', 'correo']
+                }
+            ]
+        });
+        return comandas;
+    }
+    catch (error) {
+        console.error('Error al obtener las comandas:', error);
+        throw new Error('No se pudieron obtener las comandas');
+    }
+}
 // Ejemplo de inicialización de la base de datos
 (async () => {
     const store = new AuthStore();
