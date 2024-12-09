@@ -1,6 +1,4 @@
-<h1>Bienvenido, {{user.nombre}}</h1>
 <p>Este es el menú del Mesero.</p>
-<a href="/login">Cerrar sesión</a>
 
 <h2>Mesas</h2>
 <table>
@@ -14,7 +12,7 @@
       <td>{{this.dataValues.numero}}</td> <!-- Número de la mesa -->
       <td>{{this.dataValues.estado}}</td>  <!-- Estado de la mesa -->
       <td>
-        <a href="/comanda/nueva/{{this.dataValues.id}}">Tomar Orden</a> <!-- Siempre mostrar "Tomar Orden" -->
+        <a href="/comanda/nueva/{{this..id}}">Tomar Orden</a> <!-- Siempre mostrar "Tomar Orden" -->
       </td>
     </tr>
   {{/each}}

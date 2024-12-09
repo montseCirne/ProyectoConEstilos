@@ -34,6 +34,9 @@ expressApp.engine("handlebars", (0, express_handlebars_1.engine)({
                 return options.inverse(this); // Si no son iguales, ejecutar el bloque 'inverse'
             }
         }
+    },
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true, // Desactiva la restricción de acceso al prototipo
     }
 }));
 expressApp.set("view engine", "handlebars");
