@@ -3,7 +3,7 @@ import passport from "passport";
 import { isAuthenticated } from "./auth/passport_config"; 
 import { Request, Response, NextFunction} from "express";
 import { AuthStore } from './auth/orm_auth_store'; 
-import flash from 'connect-flash';
+import { MesaModel } from './auth/orm_auth_models';
 
 function obtenerRol(req: any): string | undefined {
   return req.user ? req.user.rol : undefined;
@@ -108,6 +108,28 @@ export function registerFormRoutesUser(app: Express) {
     const rol = obtenerRol(req);
     if (rol === 'cocinero') {
       res.render("menuCocinero", { user: req.user });
+    } else {
+      res.status(403).send("Acceso no autorizado");
+    }
+  });
+
+  app.get("/admin", isAuthenticated, async (req, res) => {
+    const rol = obtenerRol(req);
+    if (rol === 'administrador') {
+      try {
+        // Obtener todas las mesas desde la base de datos
+        const mesas = await MesaModel.findAll();  // Asegúrate de que este método esté disponible con tu ORM
+  
+        res.render("menuAdmin", { 
+          user: req.user, 
+          success: req.flash('success'), 
+          error: req.flash('error'),
+          mesas: mesas // Pasar las mesas a la vista
+        });
+      } catch (err) {
+        console.error("Error al obtener las mesas: ", err);
+        res.status(500).send("Error al obtener las mesas");
+      }
     } else {
       res.status(403).send("Acceso no autorizado");
     }
