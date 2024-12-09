@@ -96,9 +96,9 @@
   </tr>
   {{#each usuarios}} <!-- Iterar sobre los usuarios -->
     <tr>
-      <td>{{this.nombre}}</td> <!-- Mostrar el nombre del usuario -->
-      <td>{{this.correo}}</td> <!-- Mostrar el correo del usuario -->
-      <td>{{this.rol}}</td> <!-- Mostrar el rol del usuario -->
+      <td>{{this.dataValues.nombre}}</td> <!-- Mostrar el nombre del usuario -->
+      <td>{{this.dataValues.correo}}</td> <!-- Mostrar el correo del usuario -->
+      <td>{{this.dataValues.rol}}</td> <!-- Mostrar el rol del usuario -->
       <td>
         <a href="/usuarios/{{this.id}}/editar">Editar</a> | 
         <form action="/usuarios/{{this.id}}/eliminar" method="POST" style="display:inline;">

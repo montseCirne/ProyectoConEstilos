@@ -88,7 +88,8 @@ function registerFormRoutesUser(app) {
                     user: req.user,
                     success: req.flash('success'),
                     error: req.flash('error'),
-                    mesas: mesas
+                    mesas: mesas,
+                    usuarios: usuarios
                 });
             }
             catch (err) {
@@ -152,6 +153,18 @@ function registerFormRoutesUser(app) {
         catch (error) {
             console.error(error);
             res.redirect('/admin?error=Error al actualizar el estado de la mesa');
+        }
+    });
+    // Ruta para eliminar un usuario
+    app.post('/usuarios/:id/eliminar', async (req, res) => {
+        try {
+            const usuarioId = req.params.id;
+            await orm_auth_models_1.UsuarioModel.destroy({ where: { id: usuarioId } });
+            res.redirect('/admin?success=Usuario eliminado exitosamente');
+        }
+        catch (error) {
+            console.error('Error al eliminar el usuario:', error);
+            res.redirect('/admin?error=Error al eliminar el usuario');
         }
     });
 }
