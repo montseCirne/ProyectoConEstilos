@@ -79,9 +79,11 @@ function registerFormRoutesUser(app) {
     app.get("/admin", passport_config_1.isAuthenticated, (req, res) => {
         const rol = obtenerRol(req);
         if (rol === 'administrador') {
-            res.render("menuAdmin", { user: req.user,
+            res.render("menuAdmin", {
+                user: req.user,
                 success: req.flash('success'),
-                error: req.flash('error') });
+                error: req.flash('error')
+            });
         }
         else {
             res.status(403).send("Acceso no autorizado");

@@ -35,9 +35,9 @@ expressApp.use((0, express_session_1.default)({
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 1000 * 60 * 60 } // Desactivar secure en desarrollo
 }));
+expressApp.use((0, connect_flash_1.default)());
 expressApp.use(passport_1.default.initialize());
 expressApp.use(passport_1.default.session());
-expressApp.use((0, connect_flash_1.default)());
 // Rutas para formularios de usuario (registrar, login, etc.)
 (0, rutas_1.registerFormRoutesUser)(expressApp);
 // Servir archivos estáticos como CSS y JS desde la carpeta "static"
