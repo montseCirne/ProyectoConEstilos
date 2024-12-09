@@ -6,7 +6,7 @@ import { engine } from "express-handlebars";
 import passport from "passport";
 import session from "express-session";
 import path from "path";
-import { isAuthenticated, authorize } from "./auth/passport_config"; // Importar la autenticación y roles
+import flash from 'connect-flash';
 import { registerFormRoutesUser } from "./rutas"; // Importar las rutas definidas
 
 const port = 5000;
@@ -36,6 +36,8 @@ expressApp.use(session({
   saveUninitialized: false,
   cookie: { secure: false, maxAge: 1000 * 60 * 60 } // Desactivar secure en desarrollo
 }));
+
+expressApp.use(flash());
 
 expressApp.use(passport.initialize());
 expressApp.use(passport.session());

@@ -11,6 +11,7 @@ const express_handlebars_1 = require("express-handlebars");
 const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
 const path_1 = __importDefault(require("path"));
+const connect_flash_1 = __importDefault(require("connect-flash"));
 const rutas_1 = require("./rutas"); // Importar las rutas definidas
 const port = 5000;
 const expressApp = (0, express_1.default)();
@@ -36,6 +37,7 @@ expressApp.use((0, express_session_1.default)({
 }));
 expressApp.use(passport_1.default.initialize());
 expressApp.use(passport_1.default.session());
+expressApp.use((0, connect_flash_1.default)());
 // Rutas para formularios de usuario (registrar, login, etc.)
 (0, rutas_1.registerFormRoutesUser)(expressApp);
 // Servir archivos estáticos como CSS y JS desde la carpeta "static"

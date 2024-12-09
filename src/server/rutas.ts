@@ -86,7 +86,10 @@ export function registerFormRoutesUser(app: Express) {
   app.get("/admin", isAuthenticated, (req, res) => {
     const rol = obtenerRol(req);
     if (rol === 'administrador') {
-      res.render("menuAdmin", { user: req.user, success: req.flash('success'), error: req.flash('error') });
+      res.render("menuAdmin", { 
+        user: req.user, 
+        success: req.flash('success'), 
+        error: req.flash('error') });
     } else {
       res.status(403).send("Acceso no autorizado");
     }
