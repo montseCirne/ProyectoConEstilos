@@ -80,6 +80,8 @@ expressApp.use(helmet.contentSecurityPolicy({
   }
 }));
 
+expressApp.use('/static', express.static(path.join(__dirname, 'static')));
+
 // Configuración de WebSocket
 const server = createServer(expressApp);
 server.on('upgrade', (req, socket, head) => {

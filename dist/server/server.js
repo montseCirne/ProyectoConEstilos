@@ -71,6 +71,7 @@ expressApp.use(helmet_1.default.contentSecurityPolicy({
         upgradeInsecureRequests: []
     }
 }));
+expressApp.use('/static', express_1.default.static(path_1.default.join(__dirname, 'static')));
 // Configuración de WebSocket
 const server = (0, http_1.createServer)(expressApp);
 server.on('upgrade', (req, socket, head) => {
