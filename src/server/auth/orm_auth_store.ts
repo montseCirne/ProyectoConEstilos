@@ -31,10 +31,23 @@ export const Comanda = sequelize.define('Comanda', {
       key: 'id',
     },
   },
-  platillos: DataTypes.JSON,
-  bebidas: DataTypes.JSON,
-  notas: DataTypes.STRING,
-  estado: DataTypes.ENUM('pendiente', 'en preparación', 'listo'),
+  platillos: {
+    type: DataTypes.JSON,
+    allowNull: false
+  },
+  bebidas: {
+    type: DataTypes.JSON,
+    allowNull: false
+  },
+  notas: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: ''
+  },
+  estado: {
+    type: DataTypes.ENUM('pendiente', 'en preparación', 'listo'),
+    allowNull: false
+  },
   meseroId: {
     type: DataTypes.INTEGER,
     references: {
@@ -42,6 +55,7 @@ export const Comanda = sequelize.define('Comanda', {
       key: 'id',
     },
     onDelete: 'CASCADE',
+    allowNull: false
   },
 });
 
