@@ -9,6 +9,7 @@ const passport_1 = __importDefault(require("passport"));
 const passport_config_1 = require("./auth/passport_config");
 const orm_auth_store_1 = require("./auth/orm_auth_store");
 const orm_auth_models_1 = require("./auth/orm_auth_models");
+const helmet_1 = __importDefault(require("helmet"));
 function obtenerRol(req) {
     return req.user ? req.user.rol : undefined;
 }
@@ -130,8 +131,16 @@ function registerFormRoutesUser(app) {
             res.status(403).send("Acceso no autorizado");
         }
     });
-    app.use((req, res, next) => {
-        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-        next();
-    });
+    app.use(helmet_1.default.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"], // Agregar CDN de fuentes
+            styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+            fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+            imgSrc: ["'self'", "data:"],
+            connectSrc: ["'self'"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: []
+        }
+    }));
 }

@@ -4,6 +4,7 @@ import { isAuthenticated } from "./auth/passport_config";
 import { Request, Response, NextFunction} from "express";
 import { AuthStore } from './auth/orm_auth_store'; 
 import { MesaModel } from './auth/orm_auth_models';
+import helmet from "helmet";
 
 function obtenerRol(req: any): string | undefined {
   return req.user ? req.user.rol : undefined;
@@ -135,14 +136,19 @@ export function registerFormRoutesUser(app: Express) {
     }
   });
 
-  app.use((req, res, next) => {
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    next();
-  });
-
-  app.get('/favicon.ico', (req, res) => {
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  });
+  app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"], 
+      scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],  // Agregar CDN de fuentes
+      styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"], 
+      fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"], 
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  }));
+  
   
   
 }

@@ -56,17 +56,19 @@ expressApp.use((req, res) => {
   proxy.web(req, res);
 });
 
-expressApp.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", 
-    "default-src 'self'; " + 
-    "script-src 'self' https://cdn.jsdelivr.net; " + 
-    "style-src 'self' 'unsafe-inline'; " + 
-    "img-src 'self' data:; " + 
-    "font-src 'self'; " + 
-    "connect-src 'self';"
-  );
-  next();
-});
+expressApp.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"], 
+    scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],  // Agregar CDN de fuentes
+    styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"], 
+    fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"], 
+    imgSrc: ["'self'", "data:"],
+    connectSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    upgradeInsecureRequests: []
+  }
+}));
+
 
 // Configuración de WebSocket
 const server = createServer(expressApp);
