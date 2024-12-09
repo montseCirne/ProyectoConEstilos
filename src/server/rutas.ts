@@ -2,41 +2,38 @@ import { Express } from "express";
 import passport from "passport";
 import { isAuthenticated } from "./auth/passport_config"; 
 import { Request, Response, NextFunction} from "express";
-import { UsuarioModel } from "./auth/orm_auth_models";
-import bcrypt from 'bcrypt';
+import { AuthStore } from './auth/orm_auth_store'; 
+import flash from 'connect-flash';
 
 function obtenerRol(req: any): string | undefined {
   return req.user ? req.user.rol : undefined;
 }
 
-// Registrar un nuevo usuario
 export async function registrarUsuario(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { nombre, correo, contrasena, rol } = req.body;
 
-  // Validaciones básicas (se pueden extender)
+  // Validación de los campos
   if (!nombre || !correo || !contrasena || !rol) {
-    res.status(400).send("Todos los campos son requeridos.");
+    req.flash('error', 'Todos los campos son requeridos.');
+    return res.redirect('/admin'); // Redirigir al formulario con el mensaje de error
   }
 
+  const store = new AuthStore();  // Crear una instancia de AuthStore
+
   try {
-    // Cifrar la contraseña antes de guardarla
-    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    // Usamos la función storeOrUpdateUser para crear o actualizar el usuario
+    await store.storeOrUpdateUser(nombre, correo, contrasena, rol);
 
-    // Crear un nuevo usuario
-    const nuevoUsuario = new UsuarioModel({
-      nombre,
-      correo,
-      contrasena: hashedPassword, // Guardamos la contraseña cifrada
-      rol,
-    });
+    // Establecer un mensaje de éxito con flash
+    req.flash('success', '¡Usuario creado con éxito!');
 
-    // Guardar el usuario en la base de datos
-    await nuevoUsuario.save();
-    res.redirect("/admin");  // Redirigir a la página de administración después de crear el usuario
+    // Redirigir después de crear el usuario
+    res.redirect("/admin");
 
   } catch (err) {
     console.error("Error al crear el usuario: ", err);
-    res.status(500).send("Hubo un error al crear el usuario.");
+    req.flash('error', 'Hubo un error al crear el usuario.');
+    res.redirect('/admin'); // Redirigir al formulario con el mensaje de error
   }
 }
 
@@ -89,7 +86,7 @@ export function registerFormRoutesUser(app: Express) {
   app.get("/admin", isAuthenticated, (req, res) => {
     const rol = obtenerRol(req);
     if (rol === 'administrador') {
-      res.render("menuAdmin", { user: req.user });
+      res.render("menuAdmin", { user: req.user, success: req.flash('success'), error: req.flash('error') });
     } else {
       res.status(403).send("Acceso no autorizado");
     }

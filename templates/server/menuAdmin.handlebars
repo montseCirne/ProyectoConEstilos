@@ -1,3 +1,17 @@
+<!-- Mostrar mensajes de éxito -->
+{{#if flash.success}}
+  <div class="alert alert-success">
+    {{flash.success}}
+  </div>
+{{/if}}
+
+<!-- Mostrar mensaje de error -->
+{{#if error}}
+  <div class="alert alert-danger">
+    {{error}}
+  </div>
+{{/if}}
+
 <h1>Bienvenido, {{user.nombre}}</h1>
 <p>Este es el menú del Administrador.</p>
 <a href="/login">Cerrar sesión</a>
@@ -38,9 +52,13 @@
 
 <h2>Gestionar Usuarios</h2>
 <form method="POST" action="/admin/crearUsuario">
+  <label for="">Nombre:</label>
   <input type="text" name="nombre" required>
+  <label for="">Correo: </label>
   <input type="email" name="correo" required>
+  <label for="">Contraseña:</label>
   <input type="password" name="contrasena" required> 
+  <label for="">Rol:</label>
   <select name="rol">
     <option value="mesero">Mesero</option>
     <option value="cocinero">Cocinero</option>
