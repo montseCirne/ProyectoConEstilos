@@ -1,0 +1,11 @@
+{{!-- verComanda.handlebars --}}
+<h1>Detalles de la Comanda</h1>
+<p><strong>ID de Mesa:</strong> {{comanda.idMesa}}</p>
+<p><strong>Platillos:</strong> {{#each comanda.platillos}} {{this}} {{/each}}</p>
+<p><strong>Bebidas:</strong> {{#each comanda.bebidas}} {{this}} {{/each}}</p>
+<p><strong>Notas:</strong> {{comanda.notas}}</p>
+<p><strong>Estado:</strong> {{comanda.estado}}</p>
+
+<h2>Mesero que tomó la comanda:</h2>
+<p>Nombre: {{comanda.mesero.nombre}}</p>
+<p>Correo: {{comanda.mesero.correo}}</p>

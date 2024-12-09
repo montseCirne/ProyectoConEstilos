@@ -59,6 +59,8 @@ export function registerFormRoutesUser(app: Express) {
 
   // Ruta para registrar un nuevo usuario
   app.post("/admin/crearUsuario", registrarUsuario);
+  app.get('/comandas/verificar/:id', isAuthenticated);
+
 
   // Ruta para redirigir según el rol del usuario
   app.get("/redirect", isAuthenticated, (req, res) => {
@@ -77,7 +79,7 @@ export function registerFormRoutesUser(app: Express) {
           res.redirect('/cocinero');
           break;
         default:
-          res.redirect('/login');  // Si no tiene rol o hay un error
+          res.redirect('/login'); 
           console.log("No se pudo determinar el rol del usuario. Redirigiendo al login.");
       }
     } else {
@@ -244,6 +246,39 @@ app.get("/admin/crearUsuario", isAuthenticated, (req: Request, res: Response) =>
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
       res.redirect('/admin?error=Error al actualizar el usuario');
+    }
+  });
+  
+
+  app.get('/comandas/verificar/:id', isAuthenticated, async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+  
+    try {
+      const comanda = await ComandaModel.findOne({ 
+        where: { id },
+        include: [
+          {
+            model: UsuarioModel,  // Información del mesero que realizó la comanda
+            as: 'mesero',
+            attributes: ['nombre', 'correo']
+          }
+        ]
+      });
+  
+      if (!comanda) {
+        res.status(404).send("Comanda no encontrada");
+        return; // Terminamos la función después de enviar la respuesta
+      }
+  
+      // Si la comanda está pendiente o en preparación, se muestra al usuario
+      if (comanda.estado === 'pendiente' || comanda.estado === 'en preparación') {
+        res.render("verComanda", { comanda }); // Asegúrate de tener la vista 'verComanda'
+      } else {
+        res.send("La comanda está lista para ser entregada.");
+      }
+    } catch (error) {
+      console.error("Error al verificar la comanda: ", error);
+      res.status(500).send("Error al verificar la comanda");
     }
   });
   
